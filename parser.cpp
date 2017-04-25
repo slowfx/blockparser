@@ -143,6 +143,12 @@ static double getMem() {
     static const uint32_t gExpectedMagic = 0x03b5d503;
 #endif
 
+#if defined BITZENY
+    static const size_t gHeaderSize = 80;
+    static auto kCoinDirName = ".bitzeny";
+    static const uint32_t gExpectedMagic = 0xf9bea5da;
+#endif
+
 #define DO(x) x
     static inline void   startBlock(const uint8_t *p)                      { DO(gCallback->startBlock(p));         }
     static inline void     endBlock(const uint8_t *p)                      { DO(gCallback->endBlock(p));           }
@@ -736,6 +742,8 @@ static void getBlockHeader(
         }
     #elif defined(JUMBUCKS)
         scrypt(hash, p, gHeaderSize);
+    #elif defined(BITZENY)
+        yescrypt(hash, p, gHeaderSize);
     #else
         sha256Twice(hash, p, gHeaderSize);
     #endif

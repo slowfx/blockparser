@@ -139,6 +139,7 @@ my(@inc) = qw(
 #-DMYRIADCOIN
 #-DUNOBTANIUM
 #-DPROTOSHARES
+#-DBITZENY
 
 
 # Libraries
@@ -179,6 +180,8 @@ my(@lib) = qw(
 
     scrypt/pbkdf2.cpp
     scrypt/scrypt.cpp
+
+    yescrypt-0.5/yescrypt.c
 
     util.cpp
     timer.cpp

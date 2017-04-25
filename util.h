@@ -372,6 +372,14 @@
         );
     #endif
 
+    #if defined(BITZENY)
+        void yescrypt(
+                  uint8_t *src,
+            const uint8_t *buf,
+            uint64_t      size
+        );
+    #endif
+
     static inline void sha256Twice(
               uint8_t *sha,
         const uint8_t *buf,

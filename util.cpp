@@ -590,6 +590,10 @@ static int getCoinType() {
         #if defined(UNOBTANIUM)
             130
         #endif
+
+        #if defined(BITZENY)
+            81
+        #endif
     ;
 }
 
@@ -1024,6 +1028,10 @@ const char *getInterestingAddr() {
 
         "udicetdXSo6Zc7vhWgAZfz4XrwagAX34RK"
 
+    #elif defined(BITZENY)
+
+        "ZdkKQFJVonSaSGd72EWAa9mk3VBcBEwTat"
+
     #else
 
         fatal("no address specified")
@@ -1077,6 +1085,22 @@ const char *getInterestingAddr() {
         unsigned char scratchpad[SCRYPT_BUFFER_SIZE];
         uint256 hash = scrypt_nosalt(buf, size, scratchpad);
         memcpy(scr, &hash, sizeof(hash));
+    }
+
+#endif
+
+#if defined(BITZENY)
+
+    extern "C" void yescrypt_hash(const char *input, char *output);
+
+    void yescrypt(
+              uint8_t *scr,
+        const uint8_t *buf,
+        uint64_t      size
+    ) {
+        char hash_buf[32];
+        yescrypt_hash((char *)buf, (char *)hash_buf);
+        memcpy(scr, hash_buf, sizeof(hash_buf));
     }
 
 #endif

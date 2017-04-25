@@ -172,9 +172,32 @@ struct SQLDump : public Callback {
 
         auto p = b->chunk->getData();
         uint8_t blockHash[kSHA256ByteSize];
-        sha256Twice(blockHash, p, 80);
 
-        SKIP(uint32_t, version, p);
+        #if defined(DARKCOIN)
+            h9(blockHash, p, 80);
+            SKIP(uint32_t, version, p);
+        #elif defined(PAYCON)
+            h13(blockHash, p, 80);
+            SKIP(uint32_t, version, p);
+        #elif defined(CLAM)
+            auto pBis = p;
+            LOAD(uint32_t, version, pBis);
+            if(6<version) {
+                sha256Twice(blockHash, p, 80);
+            } else {
+                scrypt(blockHash, p, 80);
+            }
+        #elif defined(JUMBUCKS)
+            scrypt(blockHash, p, 80);
+            SKIP(uint32_t, version, p);
+        #elif defined(BITZENY)
+            yescrypt(blockHash, p, 80);
+            SKIP(uint32_t, version, p);
+        #else
+            sha256Twice(blockHash, p, 80);
+            SKIP(uint32_t, version, p);
+        #endif
+
         SKIP(uint256_t, prevBlkHash, p);
         SKIP(uint256_t, blkMerkleRoot, p);
         LOAD(uint32_t, blkTime, p);

@@ -159,6 +159,7 @@ my(@lib) = qw(
     cb/allBalances.cpp
     cb/simpleStats.cpp
     cb/transactions.cpp
+    cb/blockstor.cpp
 
     crypto/sha256_btc.cpp
     crypto/ripemd160_btc.cpp

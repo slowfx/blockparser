@@ -392,7 +392,7 @@ struct BlockStor : public Callback {
         uint32_t *h32 = reinterpret_cast<uint32_t*>(ih);
         h32[0] ^= oi;
 
-        outputMap[h] = txoutID;
+        outputMap[h] = txID;
     }
 
     virtual void edge(

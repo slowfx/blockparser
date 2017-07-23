@@ -117,13 +117,15 @@ struct BlockStor : public Callback {
             "DROP TABLE IF EXISTS txins;\n"
             "DROP TABLE IF EXISTS addresses;\n"
             "DROP TABLE IF EXISTS states;\n"
+            "DROP TABLE IF EXISTS voidtxs;\n"
             "\n"
             "CREATE TABLE txs(\n"
             "    id int(11) unsigned NOT NULL auto_increment primary key,\n"
             "    tx BINARY(32) NOT NULL,\n"
             "    height int(11) unsigned NOT NULL,\n"
             "    time datetime NOT NULL\n"
-            // index(tx)
+            // unique(tx)
+            // index(height)
             ");\n"
             "\n"
             "CREATE TABLE txouts(\n"
@@ -192,6 +194,10 @@ struct BlockStor : public Callback {
             "time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table txs add unique(tx);\"\n"
             "echo done\n"
             "echo\n"
+            "echo 'add index txs index(height)'\n"
+            "time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table txs add index(height);\"\n"
+            "echo done\n"
+            "echo\n"
             "echo 'add index txouts index(tx_id, n)'\n"
             "time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table txouts add index(tx_id, n);\"\n"
             "echo done\n"
@@ -202,15 +208,14 @@ struct BlockStor : public Callback {
             "echo\n"
 
             // Depends on your need
-            
             //"echo 'add index txins index(tx_id)'\n"
             //"time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table txins add index(tx_id);\"\n"
             //"echo done\n"
             //"echo\n"
-            //"echo 'add index txins index(ref_id)'\n"
-            //"time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table txins add index(ref_id);\"\n"
-            //"echo done\n"
-            //"echo\n"
+            "echo 'add index txins index(ref_id)'\n"
+            "time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table txins add index(ref_id);\"\n"
+            "echo done\n"
+            "echo\n"
 
             "echo 'add index addresses unique(address)'\n"
             "time mysql -u $MYSQL_USER -p -h$MYSQL_HOST --password=\"$MYSQL_PASSWORD\" -e \"use $MYSQL_DB_NAME; alter table addresses add unique(address);\"\n"
@@ -427,7 +432,7 @@ struct BlockStor : public Callback {
             "%" PRIu32 "\n",
             ++txinID,
             (uint32_t)src->second,
-            (uint32_t)inputIndex,
+            (uint32_t)outputIndex,
             txID
         );
     }
